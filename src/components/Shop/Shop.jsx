@@ -19,14 +19,53 @@ const Shop = () => {
 
     // to get previously stored cart
     useEffect( ()=>{
-        const storedCart = getShoppingCart()
-        console.log(storedCart)
-    },[])
+        // console.log(products);//i can set anything from sate here
+        const storedCart = getShoppingCart();
+        const savedCart = [];
+        //step 1: get id
+        for(const id in storedCart){
+            // step 2 get the product by using id
+            const addedProduct = products.find(product => product.id === id);
+
+            if(addedProduct){
+                //step 3: get quantity of the product
+                const quantity = storedCart[id];
+                addedProduct.quantity = quantity;
+                //step 4:add the added to the saved cart
+                savedCart.push(addedProduct);
+            }
+            // console.log(addedProduct);
+            //step 3: get quantity of the product
+            // const quantity = storedCart[id];
+            // addedProduct.quantity = quantity;
+        }
+        //step 5:set the cart
+        setCart(savedCart);
+    },[products]);
+
+
+
 
     //handler comes from product jsx cause of react's uni directional behaviour i cant set value from a lower componnet to upper componnet..2.cart(previously added).product newly added.
 
     const handleAddToCart = (product) =>{
-        const newCart = [...cart, product];
+        // const newCart = [...cart, product];
+
+        let newCart = [];
+        //if product doesnt exist in the cart, then set quantity =1;
+        //if exist update quantity by 1
+        const exists = cart.find(pd =>pd.id === product.id);
+        if(!exists){
+            product.quantity =1;
+            newCart = [...cart, product]
+        }
+        else{
+            exists.quantity = exists.quantity + 1;
+            const remaning = cart.filter(pd=>pd.id !== product.id);
+            newCart = [...remaning, exists]
+        }
+
+
         setCart(newCart);
         addToDb(product.id)
         // getShoppingCart()
