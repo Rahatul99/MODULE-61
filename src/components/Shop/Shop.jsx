@@ -1,19 +1,35 @@
 import React, { useEffect, useState } from 'react';
+import { addToDb, getShoppingCart } from '../../utilities/fakedb';
+import Cart from '../Cart/Cart';
 import Product from '../Product/Product';
 import './Shop.css';
 
 const Shop = () => {
     const [products, setProducts] = useState([]);
 
+    //to take all data that recived by handleAddToCart(event handler)..we need a state here 
+    const [cart, setCart] = useState([]);
+
     useEffect(()=>{
         fetch('products.json')
         .then(res => res.json())
         .then(data=> setProducts(data))
-    }, [])
+    }, []);
 
-    //handler comes from product jsx cause of react's uni directional behaviour i cant set value from a lower componnet to upper componnet
+
+    // to get previously stored cart
+    useEffect( ()=>{
+        const storedCart = getShoppingCart()
+        console.log(storedCart)
+    },[])
+
+    //handler comes from product jsx cause of react's uni directional behaviour i cant set value from a lower componnet to upper componnet..2.cart(previously added).product newly added.
+
     const handleAddToCart = (product) =>{
-        console.log(product);
+        const newCart = [...cart, product];
+        setCart(newCart);
+        addToDb(product.id)
+        // getShoppingCart()
     }
 
     return (
@@ -29,7 +45,7 @@ const Shop = () => {
                 }
             </div>
             <div className="cart-container">
-                <h4>Order Summary</h4>
+                <Cart cart={cart}></Cart>
             </div>
         </div>
     );
