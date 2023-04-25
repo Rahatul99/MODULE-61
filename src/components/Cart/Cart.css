@@ -7,3 +7,14 @@
 .cart h4{
    text-align: center;
 }
+.btn-clear-cart{
+    width: 90%;
+    height: 56px;
+    align-items: center;
+    margin: 10px auto;
+    background: #FF3030;
+    border-radius: 4px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+}
